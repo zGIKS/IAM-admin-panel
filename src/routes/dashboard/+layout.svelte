@@ -26,6 +26,10 @@
 	];
 
 	function isActivePath(href: string): boolean {
+		if (href === "/dashboard") {
+			return page.url.pathname === href;
+		}
+
 		return page.url.pathname === href || page.url.pathname.startsWith(`${href}/`);
 	}
 </script>

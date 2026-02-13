@@ -7,3 +7,15 @@ export const API_ENDPOINTS = {
 export function tenantById(id: string): string {
 	return `${API_ENDPOINTS.tenants}/${id}`;
 }
+
+export function tenantAnonKeyReissue(id: string): string {
+	return `${tenantById(id)}/anon-key/reissue`;
+}
+
+export function tenantJwtSigningKeyRotate(id: string): string {
+	return `${tenantById(id)}/jwt-signing-key/rotate`;
+}
+
+export function tenantGoogleOauthRotate(id: string): string {
+	return `${tenantById(id)}/oauth/google/rotate`;
+}
