@@ -3,7 +3,6 @@ import {
 	API_ENDPOINTS,
 	tenantAnonKeyReissue,
 	tenantById,
-	tenantGoogleOauthRotate,
 	tenantJwtSigningKeyRotate
 } from "$lib/server/api/endpoints";
 
@@ -62,21 +61,6 @@ export const adminApiProxy = {
 			headers: withAdminAuthorization(token, {
 				Accept: "application/json"
 			})
-		});
-	},
-	rotateTenantGoogleOauth(
-		token: string,
-		id: string,
-		payload: { google_client_id: string; google_client_secret: string },
-		fetchFn: FetchFn
-	) {
-		return fetchFn(`${API_BASE_URL}${tenantGoogleOauthRotate(id)}`, {
-			method: "POST",
-			headers: withAdminAuthorization(token, {
-				Accept: "application/json",
-				"content-type": "application/json"
-			}),
-			body: JSON.stringify(payload)
 		});
 	}
 };

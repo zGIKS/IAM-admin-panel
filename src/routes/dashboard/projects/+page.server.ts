@@ -5,7 +5,6 @@ import type { Actions, PageServerLoad } from "./$types";
 type Tenant = {
 	id: string;
 	name: string;
-	db_strategy_type: string;
 };
 
 async function extractErrorMessage(response: Response, fallback: string): Promise<string> {

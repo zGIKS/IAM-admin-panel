@@ -58,7 +58,6 @@
 						<li class="flex items-center justify-between rounded-lg border px-3 py-2">
 							<a href={`/dashboard/projects/${project.id}`} class="block flex-1 pr-4 hover:underline">
 								<p class="text-sm font-medium">{project.name}</p>
-								<p class="text-xs text-muted-foreground">Strategy: {project.db_strategy_type}</p>
 							</a>
 							<form method="POST" action="?/delete">
 								<input type="hidden" name="id" value={project.id} />
