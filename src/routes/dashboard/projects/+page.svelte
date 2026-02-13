@@ -20,25 +20,25 @@
 
 <section class="space-y-6">
 	<Card>
-		<CardHeader class="pb-4">
-			<CardDescription>Total de proyectos creados</CardDescription>
+		<CardHeader>
+			<CardDescription>Total projects created</CardDescription>
 			<CardTitle class="text-3xl">{createdProjectsCount}</CardTitle>
 		</CardHeader>
 		<CardContent class="flex flex-wrap items-center gap-3">
 			<Button type="button" onclick={() => goto("/dashboard/projects/new")}>
-				Crear proyecto
+				Create project
 			</Button>
 			<Button variant="outline" onclick={() => (newestFirst = !newestFirst)}>
-				{newestFirst ? "Orden: Z-A" : "Orden: A-Z"}
+				{newestFirst ? "Order: Z-A" : "Order: A-Z"}
 			</Button>
 		</CardContent>
 	</Card>
 
 	<Card>
 		<CardHeader>
-			<CardTitle>Proyectos creados</CardTitle>
+			<CardTitle>Created projects</CardTitle>
 			<CardDescription>
-				{sortedProjects.length} resultado{sortedProjects.length === 1 ? "" : "s"}
+				{sortedProjects.length} result{sortedProjects.length === 1 ? "" : "s"}
 			</CardDescription>
 		</CardHeader>
 		<CardContent>
@@ -51,7 +51,7 @@
 			{/if}
 
 			{#if sortedProjects.length === 0}
-				<p class="text-sm text-muted-foreground">No hay proyectos para mostrar.</p>
+				<p class="text-sm text-muted-foreground">No projects to display.</p>
 			{:else}
 				<ul class="space-y-2">
 					{#each sortedProjects as project (project.id)}
@@ -59,7 +59,7 @@
 							<div>
 								<p class="text-sm font-medium">{project.name}</p>
 								<p class="text-xs text-muted-foreground">
-									Estado: {project.active ? "Activo" : "Inactivo"} · Estrategia: {project.db_strategy_type}
+									Status: {project.active ? "Active" : "Inactive"} · Strategy: {project.db_strategy_type}
 								</p>
 							</div>
 							<form method="POST" action="?/delete">
@@ -68,7 +68,7 @@
 									type="submit"
 									variant="ghost"
 									size="icon"
-									aria-label={`Borrar ${project.name}`}
+									aria-label={`Delete ${project.name}`}
 								>
 									<Trash2 class="size-4" />
 								</Button>

@@ -7,16 +7,16 @@
 	let { form } = $props();
 </script>
 
-<section class="mx-auto w-full max-w-lg">
+<section class="w-full">
 	<Card>
 		<CardHeader>
-			<CardTitle>Crear proyecto</CardTitle>
-			<CardDescription>Ingresa el nombre para crear un nuevo proyecto.</CardDescription>
+			<CardTitle>Create project</CardTitle>
+			<CardDescription>Enter a name to create a new project.</CardDescription>
 		</CardHeader>
 		<CardContent>
 			<form method="POST" class="space-y-4">
 				<div class="space-y-2">
-					<Label for="name">Nombre del proyecto</Label>
+					<Label for="name">Project name</Label>
 					<Input id="name" name="name" type="text" required />
 				</div>
 
@@ -25,8 +25,8 @@
 				{/if}
 
 				<div class="flex items-center gap-3">
-					<Button type="submit">Crear</Button>
-					<a href="/dashboard/projects" class="text-sm text-muted-foreground hover:underline">Cancelar</a>
+					<Button type="submit">Create</Button>
+					<a href="/dashboard/projects" class="text-sm text-muted-foreground hover:underline">Cancel</a>
 				</div>
 			</form>
 		</CardContent>

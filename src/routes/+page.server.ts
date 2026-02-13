@@ -11,7 +11,7 @@ export const actions: Actions = {
 
 		if (!username || !password) {
 			return fail(400, {
-				error: "Usuario y password son requeridos"
+				error: "Username and password are required"
 			});
 		}
 
@@ -19,13 +19,13 @@ export const actions: Actions = {
 		try {
 			result = await adminAuthService.login({ username, password }, fetch);
 		} catch (error) {
-			const message = error instanceof Error ? error.message : "No se pudo iniciar sesion";
+			const message = error instanceof Error ? error.message : "Could not sign in";
 			return fail(401, { error: message });
 		}
 
 		if (!result.token) {
 			return fail(401, {
-				error: "Login exitoso, pero no se recibio token"
+				error: "Login succeeded, but no token was received"
 			});
 		}
 

@@ -13,7 +13,7 @@ export const adminAuthProxy = {
 		});
 
 		if (!response.ok) {
-			let message = "Credenciales invalidas";
+			let message = "Invalid credentials";
 			try {
 				const errorBody = await response.json();
 				if (typeof errorBody?.message === "string" && errorBody.message.length > 0) {
@@ -39,12 +39,12 @@ export const adminAuthProxy = {
 		});
 
 		if (!response.ok) {
-			let message = "No se pudo cerrar sesion";
+			let message = "Could not sign out";
 			if (response.status === 400) {
-				message = "Solicitud de logout invalida";
+				message = "Invalid logout request";
 			}
 			if (response.status === 401) {
-				message = "Sesion no autorizada o expirada";
+				message = "Unauthorized or expired session";
 			}
 
 			try {

@@ -14,13 +14,13 @@ export const actions: Actions = {
 		const name = String(data.get("name") ?? "").trim();
 
 		if (!name) {
-			return fail(400, { error: "El nombre del proyecto es requerido" });
+			return fail(400, { error: "Project name is required" });
 		}
 
 		const response = await adminApiProxy.createTenant(token, name, fetch);
 
 		if (!response.ok) {
-			let message = "No se pudo crear el proyecto";
+			let message = "Could not create the project";
 
 			try {
 				const body = await response.json();

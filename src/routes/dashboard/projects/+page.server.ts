@@ -55,7 +55,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	} catch {
 		return {
 			tenants: [] as Tenant[],
-			loadError: "No se pudo conectar con el servicio de proyectos"
+			loadError: "Could not connect to the projects service"
 		};
 	}
 
@@ -64,7 +64,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	}
 
 	if (!response.ok) {
-		const message = await extractErrorMessage(response, "No se pudieron obtener los proyectos");
+		const message = await extractErrorMessage(response, "Could not fetch projects");
 		return {
 			tenants: [] as Tenant[],
 			loadError: message
@@ -77,7 +77,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 	} catch {
 		return {
 			tenants: [] as Tenant[],
-			loadError: "El servicio de proyectos devolvio una respuesta invalida"
+			loadError: "Projects service returned an invalid response"
 		};
 	}
 	const tenants = normalizeTenants(body);
@@ -100,14 +100,14 @@ export const actions: Actions = {
 		const id = String(data.get("id") ?? "").trim();
 
 		if (!id) {
-			return fail(400, { error: "ID de proyecto invalido" });
+			return fail(400, { error: "Invalid project ID" });
 		}
 
 		let response: Response;
 		try {
 			response = await adminApiProxy.deleteTenant(token, id, fetch);
 		} catch {
-			return fail(503, { error: "No se pudo conectar para borrar el proyecto" });
+			return fail(503, { error: "Could not connect to delete the project" });
 		}
 
 		if (response.status === 401) {
@@ -115,7 +115,7 @@ export const actions: Actions = {
 		}
 
 		if (!response.ok) {
-			const message = await extractErrorMessage(response, "No se pudo borrar el proyecto");
+			const message = await extractErrorMessage(response, "Could not delete the project");
 			return fail(response.status, { error: message });
 		}
 
