@@ -19,11 +19,11 @@
 			<CardTitle class="text-4xl tracking-tight">{data.totalProjects}</CardTitle>
 		</CardHeader>
 		<CardContent>
-			<div class="rounded-xl border border-dashed bg-muted/40 p-4">
-				<p class="text-sm text-muted-foreground">
-					Tenants activos en tu plataforma. Usa quick actions para crear o administrar proyectos.
-				</p>
-			</div>
+				<div class="rounded-xl border border-dashed bg-muted/40 p-4">
+					<p class="text-sm text-muted-foreground">
+						Active tenants in your platform. Use quick actions to create or manage projects.
+					</p>
+				</div>
 		</CardContent>
 	</Card>
 
