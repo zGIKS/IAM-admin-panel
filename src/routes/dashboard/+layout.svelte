@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
 	import { page } from "$app/state";
-	import { FolderKanban, Menu, Settings, X } from "@lucide/svelte";
+	import { FolderKanban, LayoutDashboard, Menu, Settings, X } from "@lucide/svelte";
 	import { fly } from "svelte/transition";
 
 	let { children } = $props();
 	let sidebarOpen = $state(true);
 
 	const navigationItems = [
+		{
+			label: "Dashboard",
+			href: "/dashboard",
+			icon: LayoutDashboard
+		},
 		{
 			label: "Projects",
 			href: "/dashboard/projects",
@@ -35,7 +40,7 @@
 				variant="outline"
 				size="icon"
 				class="shadow-md"
-				aria-label="Alternar menu lateral"
+				aria-label="Toggle sidebar menu"
 			>
 				{#if sidebarOpen}
 					<X class="size-5" />

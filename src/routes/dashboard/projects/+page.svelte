@@ -58,9 +58,7 @@
 						<li class="flex items-center justify-between rounded-lg border px-3 py-2">
 							<div>
 								<p class="text-sm font-medium">{project.name}</p>
-								<p class="text-xs text-muted-foreground">
-									Status: {project.active ? "Active" : "Inactive"} · Strategy: {project.db_strategy_type}
-								</p>
+								<p class="text-xs text-muted-foreground">Strategy: {project.db_strategy_type}</p>
 							</div>
 							<form method="POST" action="?/delete">
 								<input type="hidden" name="id" value={project.id} />

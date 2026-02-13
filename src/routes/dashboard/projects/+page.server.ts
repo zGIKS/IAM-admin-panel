@@ -5,7 +5,6 @@ import type { Actions, PageServerLoad } from "./$types";
 type Tenant = {
 	id: string;
 	name: string;
-	active: boolean;
 	db_strategy_type: string;
 };
 
