@@ -15,3 +15,7 @@ export function tenantAnonKeyReissue(id: string): string {
 export function tenantJwtSigningKeyRotate(id: string): string {
 	return `${tenantById(id)}/jwt-signing-key/rotate`;
 }
+
+export function tenantGoogleOauthRotate(id: string): string {
+	return `${tenantById(id)}/oauth/google/rotate`;
+}

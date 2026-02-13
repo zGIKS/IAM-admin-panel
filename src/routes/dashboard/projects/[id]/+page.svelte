@@ -9,6 +9,20 @@
 		data: PageData;
 		form?: { error?: string; success?: string; reissuedAnonKey?: string };
 	}>();
+
+	let copiedAnon = $state(false);
+	let copiedJwt = $state(false);
+
+	async function copyToClipboard(text: string, type: "anon" | "jwt") {
+		await navigator.clipboard.writeText(text);
+		if (type === "anon") {
+			copiedAnon = true;
+			setTimeout(() => (copiedAnon = false), 2000);
+		} else {
+			copiedJwt = true;
+			setTimeout(() => (copiedJwt = false), 2000);
+		}
+	}
 </script>
 
 <section class="space-y-6">
@@ -29,20 +43,25 @@
 				<CardDescription>Project configuration and security settings</CardDescription>
 			</CardHeader>
 			<CardContent class="space-y-4">
-				<div class="space-y-2">
-					<Label for="anon_key">Anon key</Label>
-					<Input
-						id="anon_key"
-						readonly
-						value={form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
-							? form.reissuedAnonKey
-							: (data.tenant.anon_key ?? "")}
-					/>
+				{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
+					? form.reissuedAnonKey
+					: (data.tenant.anon_key ?? "")}
+				{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
+
+				<div class="flex items-center gap-2">
+					<Label for="anon_key" class="w-24 shrink-0">Anon key</Label>
+					<Input id="anon_key" type="password" readonly value={anonKey} class="flex-1" />
+					<Button type="button" variant="outline" size="sm" onclick={() => copyToClipboard(anonKey, "anon")}>
+						{copiedAnon ? "Copied!" : "Copy"}
+					</Button>
 				</div>
 
-				<div class="space-y-2">
-					<Label for="jwt_secret">JWT secret</Label>
-					<Input id="jwt_secret" readonly value={data.tenant.auth_config?.jwt_secret ?? ""} />
+				<div class="flex items-center gap-2">
+					<Label for="jwt_secret" class="w-24 shrink-0">JWT secret</Label>
+					<Input id="jwt_secret" type="password" readonly value={jwtSecret} class="flex-1" />
+					<Button type="button" variant="outline" size="sm" onclick={() => copyToClipboard(jwtSecret, "jwt")}>
+						{copiedJwt ? "Copied!" : "Copy"}
+					</Button>
 				</div>
 			</CardContent>
 		</Card>
@@ -65,6 +84,38 @@
 				</form>
 				<form method="POST" action="?/rotateJwtSigningKey">
 					<Button type="submit" variant="outline">Rotate JWT signing key</Button>
+				</form>
+			</CardContent>
+		</Card>
+
+		<Card>
+			<CardHeader>
+				<CardTitle>Rotate Google OAuth credentials</CardTitle>
+				<CardDescription>Update Google client credentials for this tenant</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form method="POST" action="?/rotateGoogleOauth" class="space-y-4">
+					<div class="space-y-2">
+						<Label for="google_client_id">Google client ID</Label>
+						<Input
+							id="google_client_id"
+							name="google_client_id"
+							type="text"
+							required
+							value={data.tenant.auth_config?.google_client_id ?? ""}
+						/>
+					</div>
+					<div class="space-y-2">
+						<Label for="google_client_secret">Google client secret</Label>
+						<Input
+							id="google_client_secret"
+							name="google_client_secret"
+							type="text"
+							required
+							value={data.tenant.auth_config?.google_client_secret ?? ""}
+						/>
+					</div>
+					<Button type="submit">Update Google credentials</Button>
 				</form>
 			</CardContent>
 		</Card>
