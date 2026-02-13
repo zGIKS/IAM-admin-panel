@@ -1,0 +1,1 @@
+export { default as GoogleOAuthForm } from "./google-oauth-form.svelte";

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "$lib/components/ui/card";
-	import { Input } from "$lib/components/ui/input";
-	import { Label } from "$lib/components/ui/label";
+	import { GoogleOAuthForm } from "$lib/components/ui/google-oauth-form";
+	import { KeyDisplay } from "$lib/components/ui/key-display";
 	import type { PageData } from "./$types";
 
 	let { data, form } = $props<{
 		data: PageData;
-		form?: { error?: string; success?: string };
+		form?: { error?: string; success?: string; reissuedAnonKey?: string };
 	}>();
 </script>
 
@@ -31,15 +31,22 @@
 				<CardDescription>Project configuration and security settings</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div class="flex flex-wrap gap-6">
-					<div class="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2">
-						<span class="text-sm font-medium text-muted-foreground">Database strategy</span>
-						<span class="font-mono text-sm">{data.tenant.db_strategy_type}</span>
-					</div>
-					<div class="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2">
-						<span class="text-sm font-medium text-muted-foreground">Google OAuth client ID</span>
-						<span class="font-mono text-sm">{data.tenant.googleClientId ?? "Not configured"}</span>
-					</div>
+				{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
+					? form.reissuedAnonKey
+					: (data.tenant.anon_key ?? "")}
+				{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
+
+				<div class="space-y-4">
+					<KeyDisplay
+						label="Anon key"
+						value={anonKey}
+						id="anon_key"
+					/>
+					<KeyDisplay
+						label="JWT secret"
+						value={jwtSecret}
+						id="jwt_secret"
+					/>
 				</div>
 			</CardContent>
 		</Card>
@@ -72,23 +79,10 @@
 				<CardDescription>Update Google client credentials for this tenant</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form method="POST" action="?/rotateGoogleOauth" class="space-y-4">
-					<div class="space-y-2">
-						<Label for="google_client_id">Google client ID</Label>
-						<Input
-							id="google_client_id"
-							name="google_client_id"
-							type="text"
-							required
-							value={data.tenant.googleClientId ?? ""}
-						/>
-					</div>
-					<div class="space-y-2">
-						<Label for="google_client_secret">Google client secret</Label>
-						<Input id="google_client_secret" name="google_client_secret" type="password" required />
-					</div>
-					<Button type="submit">Update Google credentials</Button>
-				</form>
+				<GoogleOAuthForm
+					googleClientId={data.tenant.auth_config?.google_client_id}
+					googleClientSecret={data.tenant.auth_config?.google_client_secret}
+				/>
 			</CardContent>
 		</Card>
 

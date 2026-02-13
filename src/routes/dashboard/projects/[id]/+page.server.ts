@@ -6,8 +6,11 @@ import type { Actions, PageServerLoad } from "./$types";
 type TenantDetail = {
 	id: string;
 	name: string;
-	db_strategy_type: string;
-	googleClientId: string | null;
+	anon_key: string;
+	auth_config?: {
+		google_client_id?: string;
+		jwt_secret?: string;
+	};
 };
 
 async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
@@ -31,24 +34,32 @@ function toTenantDetail(payload: unknown): TenantDetail | null {
 	const body = payload as {
 		id?: unknown;
 		name?: unknown;
-		db_strategy_type?: unknown;
-		auth_config?: { google_client_id?: unknown } | undefined;
+		anon_key?: unknown;
+		auth_config?: {
+			google_client_id?: unknown;
+			jwt_secret?: unknown;
+		};
 	};
 	const id = typeof body.id === "string" ? body.id : "";
 	const name = typeof body.name === "string" ? body.name : "";
-	const dbStrategyType = typeof body.db_strategy_type === "string" ? body.db_strategy_type : "";
+	const anonKey = typeof body.anon_key === "string" ? body.anon_key : "";
 	const googleClientId =
-		typeof body.auth_config?.google_client_id === "string" ? body.auth_config.google_client_id : null;
+		typeof body.auth_config?.google_client_id === "string" ? body.auth_config.google_client_id : undefined;
+	const jwtSecret =
+		typeof body.auth_config?.jwt_secret === "string" ? body.auth_config.jwt_secret : undefined;
 
-	if (!id || !name || !dbStrategyType) {
+	if (!id || !name) {
 		return null;
 	}
 
 	return {
 		id,
 		name,
-		db_strategy_type: dbStrategyType,
-		googleClientId
+		anon_key: anonKey,
+		auth_config: {
+			google_client_id: googleClientId,
+			jwt_secret: jwtSecret
+		}
 	};
 }
 
@@ -172,8 +183,19 @@ export const actions: Actions = {
 			return fail(response.status, { error: message });
 		}
 
+		let reissuedAnonKey = "";
+		try {
+			const body = await response.json();
+			if (typeof body?.anon_key === "string") {
+				reissuedAnonKey = body.anon_key;
+			}
+		} catch {
+			// keep fallback success message
+		}
+
 		return {
-			success: "Anon key reissued successfully"
+			success: "Anon key reissued successfully",
+			reissuedAnonKey
 		};
 	},
 	rotateJwtSigningKey: async ({ fetch, cookies, params }) => {
