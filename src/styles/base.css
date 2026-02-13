@@ -1,0 +1,29 @@
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(
+        1100px 440px at 0% -10%,
+        color-mix(in oklch, var(--accent) 62%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        900px 380px at 100% 0%,
+        color-mix(in oklch, var(--secondary) 60%, transparent),
+        transparent 60%
+      );
+    background-attachment: fixed;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+  }
+}

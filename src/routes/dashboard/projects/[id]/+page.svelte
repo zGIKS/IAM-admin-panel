@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Button } from "$lib/components/ui/button";
-	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "$lib/components/ui/card";
+	import ProjectDangerZoneCard from "$lib/components/projects/project-danger-zone-card.svelte";
+	import ProjectSecretsCard from "$lib/components/projects/project-secrets-card.svelte";
+	import ProjectSecurityActionsCard from "$lib/components/projects/project-security-actions-card.svelte";
+	import { Card, CardContent } from "$lib/components/ui/card";
 	import { GoogleOAuthForm } from "$lib/components/ui/google-oauth-form";
-	import { KeyDisplay } from "$lib/components/ui/key-display";
 	import type { PageData } from "./$types";
 
 	let { data, form } = $props<{
@@ -25,31 +26,12 @@
 			</CardContent>
 		</Card>
 	{:else if data.tenant}
-		<Card class="border bg-card/80">
-			<CardHeader>
-				<CardTitle>{data.tenant.name}</CardTitle>
-				<CardDescription>Project configuration and security settings</CardDescription>
-			</CardHeader>
-			<CardContent>
-				{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
-					? form.reissuedAnonKey
-					: (data.tenant.anon_key ?? "")}
-				{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
+		{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
+			? form.reissuedAnonKey
+			: (data.tenant.anon_key ?? "")}
+		{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
 
-				<div class="space-y-4">
-					<KeyDisplay
-						label="Anon key"
-						value={anonKey}
-						id="anon_key"
-					/>
-					<KeyDisplay
-						label="JWT secret"
-						value={jwtSecret}
-						id="jwt_secret"
-					/>
-				</div>
-			</CardContent>
-		</Card>
+		<ProjectSecretsCard projectName={data.tenant.name} {anonKey} {jwtSecret} />
 
 		{#if form?.error}
 			<p class="text-sm text-destructive">{form.error}</p>
@@ -58,27 +40,10 @@
 			<p class="text-sm text-emerald-600">{form.success}</p>
 		{/if}
 
-		<Card class="border bg-card/80">
-			<CardHeader>
-				<CardTitle>Security actions</CardTitle>
-				<CardDescription>Manage tenant keys and credentials</CardDescription>
-			</CardHeader>
-			<CardContent class="flex flex-wrap items-center gap-3">
-				<form method="POST" action="?/reissueAnonKey">
-					<Button type="submit" variant="outline">Reissue anon key</Button>
-				</form>
-				<form method="POST" action="?/rotateJwtSigningKey">
-					<Button type="submit" variant="outline">Rotate JWT signing key</Button>
-				</form>
-			</CardContent>
-		</Card>
+		<ProjectSecurityActionsCard />
 
 		<Card class="border bg-card/80">
-			<CardHeader>
-				<CardTitle>Rotate Google OAuth credentials</CardTitle>
-				<CardDescription>Update Google client credentials for this tenant</CardDescription>
-			</CardHeader>
-			<CardContent>
+			<CardContent class="pt-6">
 				<GoogleOAuthForm
 					googleClientId={data.tenant.auth_config?.google_client_id}
 					googleClientSecret={data.tenant.auth_config?.google_client_secret}
@@ -86,16 +51,6 @@
 			</CardContent>
 		</Card>
 
-		<Card class="border bg-destructive/5">
-			<CardHeader>
-				<CardTitle>Danger zone</CardTitle>
-				<CardDescription>Permanently delete this project</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<form method="POST" action="?/delete">
-					<Button type="submit" variant="destructive">Delete project</Button>
-				</form>
-			</CardContent>
-		</Card>
+		<ProjectDangerZoneCard />
 	{/if}
 </section>
