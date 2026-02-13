@@ -42,26 +42,28 @@
 				<CardTitle>{data.tenant.name}</CardTitle>
 				<CardDescription>Project configuration and security settings</CardDescription>
 			</CardHeader>
-			<CardContent class="space-y-4">
+			<CardContent>
 				{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
 					? form.reissuedAnonKey
 					: (data.tenant.anon_key ?? "")}
 				{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
 
-				<div class="flex items-center gap-2">
-					<Label for="anon_key" class="w-24 shrink-0">Anon key</Label>
-					<Input id="anon_key" type="password" readonly value={anonKey} class="flex-1" />
-					<Button type="button" variant="outline" size="sm" onclick={() => copyToClipboard(anonKey, "anon")}>
-						{copiedAnon ? "Copied!" : "Copy"}
-					</Button>
-				</div>
+				<div class="flex flex-wrap gap-6">
+					<div class="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2">
+						<span class="text-sm font-medium text-muted-foreground">Anon key</span>
+						<span class="font-mono text-sm">••••••••••••</span>
+						<Button type="button" variant="ghost" size="sm" onclick={() => copyToClipboard(anonKey, "anon")}>
+							{copiedAnon ? "✓" : "Copy"}
+						</Button>
+					</div>
 
-				<div class="flex items-center gap-2">
-					<Label for="jwt_secret" class="w-24 shrink-0">JWT secret</Label>
-					<Input id="jwt_secret" type="password" readonly value={jwtSecret} class="flex-1" />
-					<Button type="button" variant="outline" size="sm" onclick={() => copyToClipboard(jwtSecret, "jwt")}>
-						{copiedJwt ? "Copied!" : "Copy"}
-					</Button>
+					<div class="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2">
+						<span class="text-sm font-medium text-muted-foreground">JWT secret</span>
+						<span class="font-mono text-sm">••••••••••••</span>
+						<Button type="button" variant="ghost" size="sm" onclick={() => copyToClipboard(jwtSecret, "jwt")}>
+							{copiedJwt ? "✓" : "Copy"}
+						</Button>
+					</div>
 				</div>
 			</CardContent>
 		</Card>
