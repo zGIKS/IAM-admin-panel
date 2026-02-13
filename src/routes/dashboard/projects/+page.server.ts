@@ -1,8 +1,6 @@
-import { API_BASE_URL } from "$env/static/private";
+import { adminApiProxy } from "$lib/server/api/admin-api.proxy";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-
-const TENANTS_PATH = "/api/v1/tenants";
 
 type Tenant = {
 	id: string;
@@ -53,12 +51,7 @@ export const load: PageServerLoad = async ({ fetch, cookies }) => {
 
 	let response: Response;
 	try {
-		response = await fetch(`${API_BASE_URL}${TENANTS_PATH}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-				Accept: "application/json"
-			}
-		});
+		response = await adminApiProxy.listTenants(token, fetch);
 	} catch {
 		return {
 			tenants: [] as Tenant[],
@@ -112,13 +105,7 @@ export const actions: Actions = {
 
 		let response: Response;
 		try {
-			response = await fetch(`${API_BASE_URL}${TENANTS_PATH}/${id}`, {
-				method: "DELETE",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					Accept: "*/*"
-				}
-			});
+			response = await adminApiProxy.deleteTenant(token, id, fetch);
 		} catch {
 			return fail(503, { error: "No se pudo conectar para borrar el proyecto" });
 		}

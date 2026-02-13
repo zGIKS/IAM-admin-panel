@@ -1,8 +1,6 @@
-import { API_BASE_URL } from "$env/static/private";
+import { adminApiProxy } from "$lib/server/api/admin-api.proxy";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
-
-const TENANTS_PATH = "/api/v1/tenants";
 
 export const actions: Actions = {
 	default: async ({ request, fetch, cookies }) => {
@@ -19,14 +17,7 @@ export const actions: Actions = {
 			return fail(400, { error: "El nombre del proyecto es requerido" });
 		}
 
-		const response = await fetch(`${API_BASE_URL}${TENANTS_PATH}`, {
-			method: "POST",
-			headers: {
-				authorization: `Bearer ${token}`,
-				"content-type": "application/json"
-			},
-			body: JSON.stringify({ name })
-		});
+		const response = await adminApiProxy.createTenant(token, name, fetch);
 
 		if (!response.ok) {
 			let message = "No se pudo crear el proyecto";

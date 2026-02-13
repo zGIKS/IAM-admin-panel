@@ -1,12 +1,10 @@
 import { API_BASE_URL } from "$env/static/private";
+import { API_ENDPOINTS } from "$lib/server/api/endpoints";
 import type { AdminLoginPayload } from "./admin-auth.assembler";
-
-const ADMIN_LOGIN_PATH = "/api/v1/admin/login";
-const ADMIN_LOGOUT_PATH = "/api/v1/admin/logout";
 
 export const adminAuthProxy = {
 	async login(payload: AdminLoginPayload, fetchFn: typeof fetch) {
-		const response = await fetchFn(`${API_BASE_URL}${ADMIN_LOGIN_PATH}`, {
+		const response = await fetchFn(`${API_BASE_URL}${API_ENDPOINTS.adminLogin}`, {
 			method: "POST",
 			headers: {
 				"content-type": "application/json"
@@ -31,7 +29,7 @@ export const adminAuthProxy = {
 		return response.json();
 	},
 	async logout(token: string, fetchFn: typeof fetch) {
-		const response = await fetchFn(`${API_BASE_URL}${ADMIN_LOGOUT_PATH}`, {
+		const response = await fetchFn(`${API_BASE_URL}${API_ENDPOINTS.adminLogout}`, {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",

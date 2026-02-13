@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { Trash2 } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "$lib/components/ui/card";
@@ -24,12 +25,9 @@
 			<CardTitle class="text-3xl">{createdProjectsCount}</CardTitle>
 		</CardHeader>
 		<CardContent class="flex flex-wrap items-center gap-3">
-			<a
-				href="/dashboard/projects/new"
-				class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
-			>
+			<Button type="button" onclick={() => goto("/dashboard/projects/new")}>
 				Crear proyecto
-			</a>
+			</Button>
 			<Button variant="outline" onclick={() => (newestFirst = !newestFirst)}>
 				{newestFirst ? "Orden: Z-A" : "Orden: A-Z"}
 			</Button>

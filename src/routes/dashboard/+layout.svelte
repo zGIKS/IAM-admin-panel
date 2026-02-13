@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Button } from "$lib/components/ui/button";
 	import { page } from "$app/state";
 	import { FolderKanban, Menu, Settings, X } from "@lucide/svelte";
 	import { fly } from "svelte/transition";
@@ -28,10 +29,12 @@
 	<!-- Mobile header: hamburger at left, title centered in a defined container -->
 	<header class="md:hidden fixed inset-x-0 top-0 z-30 border-b bg-card/95 backdrop-blur-sm">
 		<div class="mx-auto flex h-16 max-w-screen-sm items-center justify-between px-4">
-			<button
+			<Button
 				type="button"
 				onclick={() => (sidebarOpen = !sidebarOpen)}
-				class="rounded-xl border p-2.5 text-foreground shadow-md transition hover:bg-muted"
+				variant="outline"
+				size="icon"
+				class="shadow-md"
 				aria-label="Alternar menu lateral"
 			>
 				{#if sidebarOpen}
@@ -39,7 +42,7 @@
 				{:else}
 					<Menu class="size-5" />
 				{/if}
-			</button>
+			</Button>
 
 			<h1 class="text-sm font-semibold uppercase tracking-wide">Admin Panel</h1>
 			<div class="size-10" aria-hidden="true"></div>
