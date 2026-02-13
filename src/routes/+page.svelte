@@ -8,9 +8,10 @@
 </script>
 
 <main class="flex min-h-screen items-center justify-center bg-background px-6">
-	<Card class="w-full max-w-sm">
+	<Card class="w-full max-w-sm border bg-card/85 shadow-sm backdrop-blur-sm">
 		<CardHeader class="text-center">
-			<CardTitle>Login</CardTitle>
+			<p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">IAM Admin</p>
+			<CardTitle class="mt-1 text-2xl tracking-tight">Login</CardTitle>
 		</CardHeader>
 		<CardContent>
 			<form method="POST" class="space-y-4">

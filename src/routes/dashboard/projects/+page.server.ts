@@ -1,4 +1,5 @@
 import { adminApiProxy } from "$lib/server/api/admin-api.proxy";
+import { getValidTenantId } from "$lib/server/tenant-id";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
@@ -95,7 +96,7 @@ export const actions: Actions = {
 		}
 
 		const data = await request.formData();
-		const id = String(data.get("id") ?? "").trim();
+		const id = getValidTenantId(data.get("id"));
 
 		if (!id) {
 			return fail(400, { error: "Invalid project ID" });

@@ -1,3 +1,4 @@
+import { dev } from "$app/environment";
 import { redirect, type Handle } from "@sveltejs/kit";
 
 const LOGIN_ROUTE = "/";
@@ -7,8 +8,28 @@ function isProtectedRoute(pathname: string): boolean {
 	return pathname === PROTECTED_ROUTE || pathname.startsWith(`${PROTECTED_ROUTE}/`);
 }
 
+function isLikelyValidSessionToken(token: string | null): token is string {
+	if (!token) {
+		return false;
+	}
+
+	const trimmedToken = token.trim();
+	return trimmedToken.length >= 20 && !/\s/.test(trimmedToken);
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
-	const token = event.cookies.get("admin_session") ?? null;
+	const rawToken = event.cookies.get("admin_session") ?? null;
+	const token = isLikelyValidSessionToken(rawToken) ? rawToken : null;
+	if (rawToken && !token) {
+		event.cookies.set("admin_session", "", {
+			httpOnly: true,
+			secure: !dev,
+			sameSite: "lax",
+			path: "/",
+			maxAge: 0
+		});
+	}
+
 	event.locals.adminToken = token;
 	const isLoginRoute = event.url.pathname === LOGIN_ROUTE;
 	const isProtected = isProtectedRoute(event.url.pathname);
@@ -26,6 +47,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (isLoginRoute || isProtected) {
 		response.headers.set("cache-control", "no-store");
 	}
+	response.headers.set("x-content-type-options", "nosniff");
+	response.headers.set("x-frame-options", "DENY");
+	response.headers.set("referrer-policy", "no-referrer");
+	response.headers.set("permissions-policy", "camera=(), microphone=(), geolocation=()");
 
 	return response;
 };

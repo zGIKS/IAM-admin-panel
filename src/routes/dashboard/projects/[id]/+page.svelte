@@ -7,27 +7,15 @@
 
 	let { data, form } = $props<{
 		data: PageData;
-		form?: { error?: string; success?: string; reissuedAnonKey?: string };
+		form?: { error?: string; success?: string };
 	}>();
-
-	let copiedAnon = $state(false);
-	let copiedJwt = $state(false);
-
-	async function copyToClipboard(text: string, type: "anon" | "jwt") {
-		await navigator.clipboard.writeText(text);
-		if (type === "anon") {
-			copiedAnon = true;
-			setTimeout(() => (copiedAnon = false), 2000);
-		} else {
-			copiedJwt = true;
-			setTimeout(() => (copiedJwt = false), 2000);
-		}
-	}
 </script>
 
 <section class="space-y-6">
 	<div>
-		<a href="/dashboard/projects" class="text-sm text-muted-foreground hover:underline">Back to projects</a>
+		<a href="/dashboard/projects" class="text-sm font-medium text-muted-foreground hover:underline">
+			Back to projects
+		</a>
 	</div>
 
 	{#if data.loadError}
@@ -37,32 +25,20 @@
 			</CardContent>
 		</Card>
 	{:else if data.tenant}
-		<Card>
+		<Card class="border bg-card/80">
 			<CardHeader>
 				<CardTitle>{data.tenant.name}</CardTitle>
 				<CardDescription>Project configuration and security settings</CardDescription>
 			</CardHeader>
 			<CardContent>
-				{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
-					? form.reissuedAnonKey
-					: (data.tenant.anon_key ?? "")}
-				{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
-
 				<div class="flex flex-wrap gap-6">
 					<div class="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2">
-						<span class="text-sm font-medium text-muted-foreground">Anon key</span>
-						<span class="font-mono text-sm">••••••••••••</span>
-						<Button type="button" variant="ghost" size="sm" onclick={() => copyToClipboard(anonKey, "anon")}>
-							{copiedAnon ? "✓" : "Copy"}
-						</Button>
+						<span class="text-sm font-medium text-muted-foreground">Database strategy</span>
+						<span class="font-mono text-sm">{data.tenant.db_strategy_type}</span>
 					</div>
-
 					<div class="flex items-center gap-3 rounded-lg border bg-muted/50 px-4 py-2">
-						<span class="text-sm font-medium text-muted-foreground">JWT secret</span>
-						<span class="font-mono text-sm">••••••••••••</span>
-						<Button type="button" variant="ghost" size="sm" onclick={() => copyToClipboard(jwtSecret, "jwt")}>
-							{copiedJwt ? "✓" : "Copy"}
-						</Button>
+						<span class="text-sm font-medium text-muted-foreground">Google OAuth client ID</span>
+						<span class="font-mono text-sm">{data.tenant.googleClientId ?? "Not configured"}</span>
 					</div>
 				</div>
 			</CardContent>
@@ -75,7 +51,7 @@
 			<p class="text-sm text-emerald-600">{form.success}</p>
 		{/if}
 
-		<Card>
+		<Card class="border bg-card/80">
 			<CardHeader>
 				<CardTitle>Security actions</CardTitle>
 				<CardDescription>Manage tenant keys and credentials</CardDescription>
@@ -90,7 +66,7 @@
 			</CardContent>
 		</Card>
 
-		<Card>
+		<Card class="border bg-card/80">
 			<CardHeader>
 				<CardTitle>Rotate Google OAuth credentials</CardTitle>
 				<CardDescription>Update Google client credentials for this tenant</CardDescription>
@@ -104,25 +80,19 @@
 							name="google_client_id"
 							type="text"
 							required
-							value={data.tenant.auth_config?.google_client_id ?? ""}
+							value={data.tenant.googleClientId ?? ""}
 						/>
 					</div>
 					<div class="space-y-2">
 						<Label for="google_client_secret">Google client secret</Label>
-						<Input
-							id="google_client_secret"
-							name="google_client_secret"
-							type="text"
-							required
-							value={data.tenant.auth_config?.google_client_secret ?? ""}
-						/>
+						<Input id="google_client_secret" name="google_client_secret" type="password" required />
 					</div>
 					<Button type="submit">Update Google credentials</Button>
 				</form>
 			</CardContent>
 		</Card>
 
-		<Card>
+		<Card class="border bg-destructive/5">
 			<CardHeader>
 				<CardTitle>Danger zone</CardTitle>
 				<CardDescription>Permanently delete this project</CardDescription>

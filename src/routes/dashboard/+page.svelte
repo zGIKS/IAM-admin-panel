@@ -7,15 +7,22 @@
 </script>
 
 <section class="space-y-6">
-	<Card>
+	<div class="space-y-2">
+		<p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Overview</p>
+		<h1 class="text-3xl font-semibold tracking-tight">Dashboard</h1>
+		<p class="text-sm text-muted-foreground">Overview of your admin workspace</p>
+	</div>
+
+	<Card class="border bg-card/80">
 		<CardHeader>
-			<CardTitle>Dashboard</CardTitle>
-			<CardDescription>Overview of your admin workspace</CardDescription>
+			<CardDescription>Total projects</CardDescription>
+			<CardTitle class="text-4xl tracking-tight">{data.totalProjects}</CardTitle>
 		</CardHeader>
 		<CardContent>
-			<div class="rounded-lg border p-4">
-				<p class="text-xs text-muted-foreground">Total projects</p>
-				<p class="mt-1 text-2xl font-semibold">{data.totalProjects}</p>
+			<div class="rounded-xl border border-dashed bg-muted/40 p-4">
+				<p class="text-sm text-muted-foreground">
+					Tenants activos en tu plataforma. Usa quick actions para crear o administrar proyectos.
+				</p>
 			</div>
 		</CardContent>
 	</Card>
@@ -24,7 +31,7 @@
 		<p class="text-sm text-destructive">{data.loadError}</p>
 	{/if}
 
-	<Card>
+	<Card class="border bg-card/80">
 		<CardHeader>
 			<CardTitle>Quick actions</CardTitle>
 		</CardHeader>

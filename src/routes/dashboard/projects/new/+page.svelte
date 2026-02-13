@@ -7,8 +7,13 @@
 	let { form } = $props();
 </script>
 
-<section class="w-full">
-	<Card>
+<section class="mx-auto w-full max-w-2xl space-y-4">
+	<div class="space-y-1">
+		<p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Projects</p>
+		<h1 class="text-2xl font-semibold tracking-tight">Create project</h1>
+	</div>
+
+	<Card class="border bg-card/80">
 		<CardHeader>
 			<CardTitle>Create project</CardTitle>
 			<CardDescription>Enter a name to create a new project.</CardDescription>

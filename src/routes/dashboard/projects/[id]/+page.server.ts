@@ -1,17 +1,13 @@
 import { adminApiProxy } from "$lib/server/api/admin-api.proxy";
+import { getValidTenantId } from "$lib/server/tenant-id";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 type TenantDetail = {
 	id: string;
 	name: string;
-	anon_key: string;
 	db_strategy_type: string;
-	auth_config?: {
-		google_client_id?: string;
-		google_client_secret?: string;
-		jwt_secret?: string;
-	};
+	googleClientId: string | null;
 };
 
 async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
@@ -27,6 +23,35 @@ async function extractErrorMessage(response: Response, fallback: string): Promis
 	return fallback;
 }
 
+function toTenantDetail(payload: unknown): TenantDetail | null {
+	if (!payload || typeof payload !== "object") {
+		return null;
+	}
+
+	const body = payload as {
+		id?: unknown;
+		name?: unknown;
+		db_strategy_type?: unknown;
+		auth_config?: { google_client_id?: unknown } | undefined;
+	};
+	const id = typeof body.id === "string" ? body.id : "";
+	const name = typeof body.name === "string" ? body.name : "";
+	const dbStrategyType = typeof body.db_strategy_type === "string" ? body.db_strategy_type : "";
+	const googleClientId =
+		typeof body.auth_config?.google_client_id === "string" ? body.auth_config.google_client_id : null;
+
+	if (!id || !name || !dbStrategyType) {
+		return null;
+	}
+
+	return {
+		id,
+		name,
+		db_strategy_type: dbStrategyType,
+		googleClientId
+	};
+}
+
 export const load: PageServerLoad = async ({ fetch, cookies, params }) => {
 	const token = cookies.get("admin_session");
 
@@ -34,7 +59,7 @@ export const load: PageServerLoad = async ({ fetch, cookies, params }) => {
 		throw redirect(303, "/");
 	}
 
-	const id = String(params.id ?? "").trim();
+	const id = getValidTenantId(params.id);
 	if (!id) {
 		throw redirect(303, "/dashboard/projects");
 	}
@@ -69,7 +94,15 @@ export const load: PageServerLoad = async ({ fetch, cookies, params }) => {
 	}
 
 	try {
-		const tenant = (await response.json()) as TenantDetail;
+		const payload = await response.json();
+		const tenant = toTenantDetail(payload);
+		if (!tenant) {
+			return {
+				tenant: null as TenantDetail | null,
+				loadError: "Projects service returned an invalid project payload"
+			};
+		}
+
 		return {
 			tenant,
 			loadError: null
@@ -89,7 +122,7 @@ export const actions: Actions = {
 			throw redirect(303, "/");
 		}
 
-		const id = String(params.id ?? "").trim();
+		const id = getValidTenantId(params.id);
 		if (!id) {
 			return fail(400, { error: "Invalid project ID" });
 		}
@@ -118,7 +151,7 @@ export const actions: Actions = {
 			throw redirect(303, "/");
 		}
 
-		const id = String(params.id ?? "").trim();
+		const id = getValidTenantId(params.id);
 		if (!id) {
 			return fail(400, { error: "Invalid project ID" });
 		}
@@ -139,19 +172,8 @@ export const actions: Actions = {
 			return fail(response.status, { error: message });
 		}
 
-		let reissuedAnonKey = "";
-		try {
-			const body = await response.json();
-			if (typeof body?.anon_key === "string") {
-				reissuedAnonKey = body.anon_key;
-			}
-		} catch {
-			// keep fallback message only
-		}
-
 		return {
-			success: "Anon key reissued successfully",
-			reissuedAnonKey
+			success: "Anon key reissued successfully"
 		};
 	},
 	rotateJwtSigningKey: async ({ fetch, cookies, params }) => {
@@ -160,7 +182,7 @@ export const actions: Actions = {
 			throw redirect(303, "/");
 		}
 
-		const id = String(params.id ?? "").trim();
+		const id = getValidTenantId(params.id);
 		if (!id) {
 			return fail(400, { error: "Invalid project ID" });
 		}
@@ -199,7 +221,7 @@ export const actions: Actions = {
 			throw redirect(303, "/");
 		}
 
-		const id = String(params.id ?? "").trim();
+		const id = getValidTenantId(params.id);
 		if (!id) {
 			return fail(400, { error: "Invalid project ID" });
 		}

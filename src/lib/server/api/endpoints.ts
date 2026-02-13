@@ -5,7 +5,7 @@ export const API_ENDPOINTS = {
 } as const;
 
 export function tenantById(id: string): string {
-	return `${API_ENDPOINTS.tenants}/${id}`;
+	return `${API_ENDPOINTS.tenants}/${encodeURIComponent(id)}`;
 }
 
 export function tenantAnonKeyReissue(id: string): string {

@@ -19,10 +19,16 @@
 </script>
 
 <section class="space-y-6">
-	<Card>
+	<div class="space-y-2">
+		<p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Projects</p>
+		<h1 class="text-3xl font-semibold tracking-tight">Project management</h1>
+		<p class="text-sm text-muted-foreground">Create, sort and remove tenants from your workspace.</p>
+	</div>
+
+	<Card class="border bg-card/80">
 		<CardHeader>
 			<CardDescription>Total projects created</CardDescription>
-			<CardTitle class="text-3xl">{createdProjectsCount}</CardTitle>
+			<CardTitle class="text-4xl tracking-tight">{createdProjectsCount}</CardTitle>
 		</CardHeader>
 		<CardContent class="flex flex-wrap items-center gap-3">
 			<Button type="button" onclick={() => goto("/dashboard/projects/new")}>
@@ -34,7 +40,7 @@
 		</CardContent>
 	</Card>
 
-	<Card>
+	<Card class="border bg-card/80">
 		<CardHeader>
 			<CardTitle>Created projects</CardTitle>
 			<CardDescription>
@@ -53,9 +59,9 @@
 			{#if sortedProjects.length === 0}
 				<p class="text-sm text-muted-foreground">No projects to display.</p>
 			{:else}
-				<ul class="space-y-2">
+				<ul class="space-y-2.5">
 					{#each sortedProjects as project (project.id)}
-						<li class="flex items-center justify-between rounded-lg border px-3 py-2">
+						<li class="flex items-center justify-between rounded-xl border bg-background/70 px-3 py-2.5 shadow-sm">
 							<a href={`/dashboard/projects/${project.id}`} class="block flex-1 pr-4 hover:underline">
 								<p class="text-sm font-medium">{project.name}</p>
 							</a>

@@ -17,7 +17,12 @@ export const actions: Actions = {
 			return fail(400, { error: "Project name is required" });
 		}
 
-		const response = await adminApiProxy.createTenant(token, name, fetch);
+		let response: Response;
+		try {
+			response = await adminApiProxy.createTenant(token, name, fetch);
+		} catch {
+			return fail(503, { error: "Could not connect to create the project" });
+		}
 
 		if (!response.ok) {
 			let message = "Could not create the project";
