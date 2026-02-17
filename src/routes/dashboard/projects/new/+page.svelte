@@ -22,7 +22,21 @@
 			<form method="POST" class="space-y-4">
 				<div class="space-y-2">
 					<Label for="name">Project name</Label>
-					<Input id="name" name="name" type="text" required />
+					<Input id="name" name="name" type="text" required placeholder="My Awesome Project" />
+				</div>
+
+				<div class="space-y-2">
+					<Label for="frontend_url">Frontend URL</Label>
+					<Input
+						id="frontend_url"
+						name="frontend_url"
+						type="url"
+						required
+						placeholder="https://myapp.com"
+					/>
+					<p class="text-[0.8rem] text-muted-foreground">
+						The URL where your frontend application is hosted.
+					</p>
 				</div>
 
 				{#if form?.error}

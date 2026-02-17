@@ -64,6 +64,11 @@
 						<li class="flex items-center justify-between rounded-xl border bg-background/70 px-3 py-2.5 shadow-sm">
 							<a href={`/dashboard/projects/${project.id}`} class="block flex-1 pr-4 hover:underline">
 								<p class="text-sm font-medium">{project.name}</p>
+								{#if project.auth_config?.frontend_url}
+									<p class="text-xs text-muted-foreground">
+										{project.auth_config.frontend_url}
+									</p>
+								{/if}
 							</a>
 							<form method="POST" action="?/delete">
 								<input type="hidden" name="id" value={project.id} />

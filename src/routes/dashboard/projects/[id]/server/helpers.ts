@@ -42,6 +42,7 @@ export function toTenantDetail(payload: unknown): TenantDetail | null {
 		name?: unknown;
 		anon_key?: unknown;
 		auth_config?: {
+			frontend_url?: unknown;
 			google_client_id?: unknown;
 			google_client_secret?: unknown;
 			jwt_secret?: unknown;
@@ -50,6 +51,8 @@ export function toTenantDetail(payload: unknown): TenantDetail | null {
 	const id = typeof body.id === "string" ? body.id : "";
 	const name = typeof body.name === "string" ? body.name : "";
 	const anonKey = typeof body.anon_key === "string" ? body.anon_key : "";
+	const frontendUrl =
+		typeof body.auth_config?.frontend_url === "string" ? body.auth_config.frontend_url : undefined;
 	const googleClientId =
 		typeof body.auth_config?.google_client_id === "string" ? body.auth_config.google_client_id : undefined;
 	const googleClientSecret =
@@ -68,6 +71,7 @@ export function toTenantDetail(payload: unknown): TenantDetail | null {
 		name,
 		anon_key: anonKey,
 		auth_config: {
+			frontend_url: frontendUrl,
 			google_client_id: googleClientId,
 			google_client_secret: googleClientSecret,
 			jwt_secret: jwtSecret

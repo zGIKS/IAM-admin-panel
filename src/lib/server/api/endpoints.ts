@@ -19,3 +19,7 @@ export function tenantJwtSigningKeyRotate(id: string): string {
 export function tenantGoogleOauthRotate(id: string): string {
 	return `${tenantById(id)}/oauth/google/rotate`;
 }
+
+export function tenantFrontendUrlUpdate(id: string): string {
+	return `${tenantById(id)}/frontend-url`;
+}

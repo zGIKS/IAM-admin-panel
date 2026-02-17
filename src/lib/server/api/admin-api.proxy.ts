@@ -3,6 +3,7 @@ import {
 	API_ENDPOINTS,
 	tenantAnonKeyReissue,
 	tenantById,
+	tenantFrontendUrlUpdate,
 	tenantGoogleOauthRotate,
 	tenantJwtSigningKeyRotate
 } from "$lib/server/api/endpoints";
@@ -31,13 +32,22 @@ export const adminApiProxy = {
 			})
 		});
 	},
-	createTenant(token: string, name: string, fetchFn: FetchFn) {
+	createTenant(token: string, name: string, frontendUrl: string, fetchFn: FetchFn) {
 		return fetchFn(`${API_BASE_URL}${API_ENDPOINTS.tenants}`, {
 			method: "POST",
 			headers: withAdminAuthorization(token, {
 				"content-type": "application/json"
 			}),
-			body: JSON.stringify({ name })
+			body: JSON.stringify({ name, frontend_url: frontendUrl })
+		});
+	},
+	updateTenantFrontendUrl(token: string, id: string, frontendUrl: string, fetchFn: FetchFn) {
+		return fetchFn(`${API_BASE_URL}${tenantFrontendUrlUpdate(id)}`, {
+			method: "PUT",
+			headers: withAdminAuthorization(token, {
+				"content-type": "application/json"
+			}),
+			body: JSON.stringify({ frontend_url: frontendUrl })
 		});
 	},
 	deleteTenant(token: string, id: string, fetchFn: FetchFn) {

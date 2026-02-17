@@ -14,21 +14,29 @@ export async function extractErrorMessage(response: Response, fallback: string):
 }
 
 export function normalizeTenants(payload: unknown): Tenant[] {
-	if (Array.isArray(payload)) {
-		return payload as Tenant[];
-	}
+	let rawTenants: any[] = [];
 
-	if (payload && typeof payload === "object") {
+	if (Array.isArray(payload)) {
+		rawTenants = payload;
+	} else if (payload && typeof payload === "object") {
 		const maybeItems = (payload as { items?: unknown }).items;
 		if (Array.isArray(maybeItems)) {
-			return maybeItems as Tenant[];
-		}
-
-		const maybeData = (payload as { data?: unknown }).data;
-		if (Array.isArray(maybeData)) {
-			return maybeData as Tenant[];
+			rawTenants = maybeItems;
+		} else {
+			const maybeData = (payload as { data?: unknown }).data;
+			if (Array.isArray(maybeData)) {
+				rawTenants = maybeData;
+			}
 		}
 	}
 
-	return [];
+	return rawTenants.map((t: any) => ({
+		id: String(t.id ?? ""),
+		name: String(t.name ?? ""),
+		auth_config: t.auth_config
+			? {
+					frontend_url: String(t.auth_config.frontend_url ?? "")
+				}
+			: undefined
+	}));
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ProjectDangerZoneCard from "$lib/components/projects/project-danger-zone-card.svelte";
+	import ProjectFrontendUrlCard from "$lib/components/projects/project-frontend-url-card.svelte";
 	import ProjectSecretsCard from "$lib/components/projects/project-secrets-card.svelte";
 	import ProjectSecurityActionsCard from "$lib/components/projects/project-security-actions-card.svelte";
 	import { Card, CardContent } from "$lib/components/ui/card";
@@ -32,6 +33,8 @@
 		{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
 
 		<ProjectSecretsCard projectName={data.tenant.name} {anonKey} {jwtSecret} />
+
+		<ProjectFrontendUrlCard frontendUrl={data.tenant.auth_config?.frontend_url} />
 
 		{#if form?.error}
 			<p class="text-sm text-destructive">{form.error}</p>

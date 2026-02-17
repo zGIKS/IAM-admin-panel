@@ -12,14 +12,19 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const name = String(data.get("name") ?? "").trim();
+		const frontendUrl = String(data.get("frontend_url") ?? "").trim();
 
 		if (!name) {
 			return fail(400, { error: "Project name is required" });
 		}
 
+		if (!frontendUrl) {
+			return fail(400, { error: "Frontend URL is required" });
+		}
+
 		let response: Response;
 		try {
-			response = await adminApiProxy.createTenant(token, name, fetch);
+			response = await adminApiProxy.createTenant(token, name, frontendUrl, fetch);
 		} catch {
 			return fail(503, { error: "Could not connect to create the project" });
 		}
