@@ -40,3 +40,20 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Docker
+
+Define your IAM URL and app port in `.env`:
+
+```sh
+API_BASE_URL=http://localhost:8081
+APP_PORT=5173
+```
+
+Run with Docker Compose:
+
+```sh
+docker compose up --build
+```
+
+The app is exposed on `http://localhost:${APP_PORT}` and all server-side IAM calls use `API_BASE_URL`.

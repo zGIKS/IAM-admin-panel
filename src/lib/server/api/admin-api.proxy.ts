@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import {
 	API_ENDPOINTS,
 	tenantAnonKeyReissue,
@@ -9,6 +9,7 @@ import {
 } from "$lib/server/api/endpoints";
 
 type FetchFn = typeof fetch;
+const API_BASE_URL = env.API_BASE_URL ?? "";
 
 function withAdminAuthorization(token: string, headers?: HeadersInit): HeadersInit {
 	return {

@@ -1,6 +1,7 @@
-import { API_BASE_URL } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { API_ENDPOINTS } from "$lib/server/api/endpoints";
 import type { AdminLoginPayload } from "./admin-auth.assembler";
+const API_BASE_URL = env.API_BASE_URL ?? "";
 
 export const adminAuthProxy = {
 	async login(payload: AdminLoginPayload, fetchFn: typeof fetch) {

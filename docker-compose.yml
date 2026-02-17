@@ -1,0 +1,16 @@
+name: asphanyx-dashboard
+
+services:
+  asphanyx-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_PORT: ${APP_PORT}
+    container_name: asphanyx-dashboard
+    env_file:
+      - .env
+    environment:
+      APP_PORT: ${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"

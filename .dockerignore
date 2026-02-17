@@ -1,0 +1,7 @@
+.git
+.gitignore
+.svelte-kit
+node_modules
+npm-debug.log
+bun-debug.log
+dist
