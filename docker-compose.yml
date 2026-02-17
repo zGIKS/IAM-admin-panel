@@ -2,6 +2,7 @@ name: asphanyx-dashboard
 
 services:
   asphanyx-dashboard:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile

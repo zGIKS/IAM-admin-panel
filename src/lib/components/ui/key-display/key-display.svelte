@@ -13,13 +13,51 @@
 
 	const MASKED_SECRET = "****************";
 	let copied = $state(false);
+	let copyError = $state<string | null>(null);
+
+	function fallbackCopyText(text: string) {
+		const textArea = document.createElement("textarea");
+		textArea.value = text;
+		textArea.setAttribute("readonly", "");
+		textArea.style.position = "fixed";
+		textArea.style.opacity = "0";
+		document.body.appendChild(textArea);
+		textArea.select();
+		textArea.setSelectionRange(0, textArea.value.length);
+		const copiedWithFallback = document.execCommand("copy");
+		document.body.removeChild(textArea);
+		return copiedWithFallback;
+	}
 
 	async function copyToClipboard() {
-		if (!value) {
+		copyError = null;
+		if (!value || value.trim().length === 0) {
+			copyError = "No value available to copy";
 			return;
 		}
 
-		await navigator.clipboard.writeText(value);
+		let didCopy = false;
+		if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+			try {
+				await navigator.clipboard.writeText(value);
+				didCopy = true;
+			} catch {
+				didCopy = false;
+			}
+		}
+
+		if (!didCopy && typeof document !== "undefined") {
+			didCopy = fallbackCopyText(value);
+		}
+
+		if (!didCopy) {
+			if (typeof window !== "undefined") {
+				window.prompt("Copy this value manually:", value);
+			}
+			copyError = "Browser blocked automatic copy";
+			return;
+		}
+
 		copied = true;
 		setTimeout(() => (copied = false), 1800);
 	}
@@ -33,4 +71,7 @@
 			{copied ? "Copied" : "Copy"}
 		</Button>
 	</div>
+	{#if copyError}
+		<p class="text-xs text-destructive">{copyError}</p>
+	{/if}
 </div>

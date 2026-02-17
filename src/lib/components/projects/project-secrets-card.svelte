@@ -5,10 +5,9 @@
 	interface Props {
 		projectName: string;
 		anonKey: string;
-		jwtSecret: string;
 	}
 
-	let { projectName, anonKey, jwtSecret }: Props = $props();
+	let { projectName, anonKey }: Props = $props();
 </script>
 
 <Card class="border bg-card/80">
@@ -16,10 +15,9 @@
 		<CardTitle>{projectName}</CardTitle>
 		<CardDescription>Project configuration and security settings</CardDescription>
 	</CardHeader>
-	<CardContent>
-		<div class="space-y-4">
-			<KeyDisplay label="Anon key" value={anonKey} id="anon_key" />
-			<KeyDisplay label="JWT secret" value={jwtSecret} id="jwt_secret" />
-		</div>
-	</CardContent>
-</Card>
+		<CardContent>
+			<div class="space-y-4">
+				<KeyDisplay label="Anon key" value={anonKey} id="anon_key" />
+			</div>
+		</CardContent>
+	</Card>

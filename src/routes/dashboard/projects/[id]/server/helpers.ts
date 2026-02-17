@@ -41,11 +41,16 @@ export function toTenantDetail(payload: unknown): TenantDetail | null {
 		id?: unknown;
 		name?: unknown;
 		anon_key?: unknown;
+		jwt_secret?: unknown;
+		jwt_signing_key?: unknown;
+		jwt_signing_secret?: unknown;
 		auth_config?: {
 			frontend_url?: unknown;
 			google_client_id?: unknown;
 			google_client_secret?: unknown;
 			jwt_secret?: unknown;
+			jwt_signing_key?: unknown;
+			jwt_signing_secret?: unknown;
 		};
 	};
 	const id = typeof body.id === "string" ? body.id : "";
@@ -59,8 +64,17 @@ export function toTenantDetail(payload: unknown): TenantDetail | null {
 		typeof body.auth_config?.google_client_secret === "string"
 			? body.auth_config.google_client_secret
 			: undefined;
-	const jwtSecret =
-		typeof body.auth_config?.jwt_secret === "string" ? body.auth_config.jwt_secret : undefined;
+	const jwtSecretCandidates = [
+		body.auth_config?.jwt_secret,
+		body.auth_config?.jwt_signing_secret,
+		body.auth_config?.jwt_signing_key,
+		body.jwt_secret,
+		body.jwt_signing_secret,
+		body.jwt_signing_key
+	];
+	const jwtSecret = jwtSecretCandidates.find(
+		(candidate): candidate is string => typeof candidate === "string" && candidate.length > 0
+	);
 
 	if (!id || !name) {
 		return null;

@@ -30,9 +30,8 @@
 		{@const anonKey = form?.reissuedAnonKey && form.reissuedAnonKey.length > 0
 			? form.reissuedAnonKey
 			: (data.tenant.anon_key ?? "")}
-		{@const jwtSecret = data.tenant.auth_config?.jwt_secret ?? ""}
 
-		<ProjectSecretsCard projectName={data.tenant.name} {anonKey} {jwtSecret} />
+		<ProjectSecretsCard projectName={data.tenant.name} {anonKey} />
 
 		<ProjectFrontendUrlCard frontendUrl={data.tenant.auth_config?.frontend_url} />
 
