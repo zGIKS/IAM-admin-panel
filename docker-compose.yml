@@ -12,5 +12,14 @@ services:
       - .env
     environment:
       APP_PORT: ${APP_PORT}
+      API_BASE_URL: http://auth-saas-app:8081
     ports:
       - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - default
+      - auth_saas_backend
+
+networks:
+  auth_saas_backend:
+    external: true
+    name: auth-saas_backend
